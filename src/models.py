@@ -14,7 +14,6 @@ from .ops import pixelwise_accuracy, preprocess, postprocess
 from .ops import COLORSPACE_RGB, COLORSPACE_LAB
 from .utils import stitch_images, turing_test, imshow, visualize
 
-
 class BaseModel:
     def __init__(self, sess, options):
         self.sess = sess
@@ -30,6 +29,7 @@ class BaseModel:
         self.iteration = 0
         self.epoch = 0
         self.is_built = False
+        self.sample_count = 0
 
     def train(self):
         self.build()
@@ -139,7 +139,8 @@ class BaseModel:
             imshow(np.array(img), self.name)
         else:
             print('\nsaving sample ' + sample + ' - learning rate: ' + str(rate))
-            img.save(os.path.join(self.samples_dir, sample))
+            img.save(os.path.join(self.samples_dir, sample + self.sample_count))
+            self.sample_count += self.sample_count
 
     def turing_test(self):
         batch_size = self.options.batch_size
