@@ -119,7 +119,7 @@ class BaseModel:
 
         print('\n')
 
-    def sample(self, show=True):
+    def sample(self, show=False):
         self.build()
 
         input_rgb = next(self.sample_generator)
