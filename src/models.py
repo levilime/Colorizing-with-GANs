@@ -139,7 +139,7 @@ class BaseModel:
             imshow(np.array(img), self.name)
         else:
             print('\nsaving sample ' + sample + ' - learning rate: ' + str(rate))
-            img.save(os.path.join(self.samples_dir, sample + self.sample_count))
+            img.save(os.path.join(self.samples_dir, sample + str(self.sample_count)))
             self.sample_count += self.sample_count
 
     def turing_test(self):
