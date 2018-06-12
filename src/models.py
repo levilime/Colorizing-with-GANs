@@ -120,10 +120,10 @@ class BaseModel:
                 print(str(width))
                 print(str(height))
                 img = Image.new('RGB', (width, height))
-                print(fake_image)
                 pred = np.array(fake_image)
+                print(str(fake_image))
                 print(str(pred))
-            for ix in range(width * height):
+                for ix in range(width * height):
                     xoffset = ix
                     yoffset = int(int(ix) / int(width))
                     im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
