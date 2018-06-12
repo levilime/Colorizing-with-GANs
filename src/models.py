@@ -113,9 +113,9 @@ class BaseModel:
             if saveImgs:
                 name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
                 fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
+                fake_image = fake_image.eval()
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
-
                 width, height = fake_image[0][:, :, 0].shape
                 img = Image.new('RGB', (width, height))
                 pred = np.array(fake_image)
