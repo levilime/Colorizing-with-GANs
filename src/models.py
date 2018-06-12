@@ -129,7 +129,7 @@ class BaseModel:
                 #     yoffset = int(int(ix) / int(width))
                 #     im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
                 #     img.paste(im3, (xoffset, yoffset))
-                img = Image.fromarray(pred)
+                img = Image.fromarray(pred.astype('uint8'))
                 img.save(os.path.join(self.result_dir, name))
                 step = step + 1
 
