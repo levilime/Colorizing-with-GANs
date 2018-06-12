@@ -20,6 +20,7 @@ class BaseModel:
         self.options = options
         self.name = options.name
         self.samples_dir = os.path.join(options.checkpoints_path, 'samples')
+        self.result_dir = os.path.join(options.checkpoints_path, 'results');
         self.test_log_file = os.path.join(options.checkpoints_path, 'log_test.dat')
         self.train_log_file = os.path.join(options.checkpoints_path, 'log_train.dat')
         self.global_step = tf.Variable(0, name='global_step', trainable=False)
@@ -92,14 +93,14 @@ class BaseModel:
             if self.options.validate:
                 self.evaluate()
 
-    def evaluate(self):
+    def evaluate(self, saveImgs=False):
         print('\n\nEvaluating epoch: %d' % self.epoch)
         test_total = len(self.dataset_test)
         test_generator = self.dataset_test.generator(self.options.batch_size)
         progbar = keras.utils.Progbar(test_total)
 
         result = []
-
+        step = 0
         for input_rgb in test_generator:
             feed_dic = {self.input_rgb: input_rgb}
 
@@ -107,6 +108,14 @@ class BaseModel:
             # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
             result.append(self.eval_outputs(feed_dic=feed_dic))
             progbar.add(len(input_rgb))
+
+            if saveImgs:
+                name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
+                fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
+                fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
+                                         colorspace_out=COLORSPACE_RGB)
+                fake_image.save(os.path.join(self.result_dir, name))
+                step = step + 1
 
         result = np.mean(np.array(result), axis=0)
         print('Results: D loss: %f - D fake: %f - D real: %f - G loss: %f - G L1: %f - G gan: %f - accuracy: %f'
@@ -126,7 +135,8 @@ class BaseModel:
 
         step, rate = self.sess.run([self.global_step, self.learning_rate])
         fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
-        fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space, colorspace_out=COLORSPACE_RGB)
+        fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
+                                 colorspace_out=COLORSPACE_RGB)
         img = stitch_images(input_gray, input_rgb, fake_image.eval())
 
         if not os.path.exists(self.samples_dir):
