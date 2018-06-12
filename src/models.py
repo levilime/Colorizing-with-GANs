@@ -125,7 +125,7 @@ class BaseModel:
                 # print(str(fake_image))
                 # print(str(pred))
                 for ix in range(width * height):
-                    xoffset = ix % width
+                    xoffset = int(ix) % int(width)
                     yoffset = int(int(ix) / int(width))
                     im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
                     img.paste(im3, (xoffset, yoffset))
