@@ -119,17 +119,16 @@ class BaseModel:
                 # print()
                 # print(str(width))
                 # print(str(height))
-                # img = Image.new('RGB', (width, height))
-                pred = fake_image.eval()
+                img = Image.new('RGB', (width, height))
+                pred = np.array(fake_image.eval())
                 # print(fake_image.eval())
                 # print(str(fake_image))
                 # print(str(pred))
-                # for ix in range(width * height):
-                #     xoffset = ix
-                #     yoffset = int(int(ix) / int(width))
-                #     im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
-                #     img.paste(im3, (xoffset, yoffset))
-                img = Image.fromarray(pred).astype(np.uint8)
+                for ix in range(width * height):
+                    xoffset = ix % width
+                    yoffset = int(int(ix) / int(width))
+                    im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
+                    img.paste(im3, (xoffset, yoffset))
                 img.save(os.path.join(self.result_dir, name))
                 step = step + 1
 
