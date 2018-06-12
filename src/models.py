@@ -120,7 +120,7 @@ class BaseModel:
                 # print(str(width))
                 # print(str(height))
                 # img = Image.new('RGB', (width, height))
-                pred = np.array(fake_image.eval())
+                pred = fake_image.eval()
                 # print(fake_image.eval())
                 # print(str(fake_image))
                 # print(str(pred))
