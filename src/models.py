@@ -13,6 +13,7 @@ from .dataset import Places365Dataset, Cifar10Dataset
 from .ops import pixelwise_accuracy, preprocess, postprocess
 from .ops import COLORSPACE_RGB, COLORSPACE_LAB
 from .utils import stitch_images, turing_test, imshow, visualize
+from PIL import Image
 
 class BaseModel:
     def __init__(self, sess, options):
@@ -114,7 +115,19 @@ class BaseModel:
                 fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
-                fake_image.save(os.path.join(self.result_dir, name))
+
+                width, height = fake_image[0][:, :, 0].shape
+                img = Image.new('RGB', (width, height))
+                pred = np.array(fake_image)
+                l = len(fake_image)
+
+                for ix in range(l):
+                    xoffset = l
+                    yoffset = int(ix / width) * height
+                    im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
+                    img.paste(im3, (xoffset, yoffset))
+
+                img.save(os.path.join(self.result_dir, name))
                 step = step + 1
 
         result = np.mean(np.array(result), axis=0)
