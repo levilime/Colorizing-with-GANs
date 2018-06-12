@@ -123,7 +123,7 @@ class BaseModel:
                 pred = np.array(fake_image.eval())
                 # print(fake_image.eval())
                 # print(str(fake_image))
-                # print(str(pred))
+                print(str(pred))
                 for ix in range(width * height):
                     xoffset = int(ix) % int(width)
                     yoffset = int(int(ix) / int(width))
