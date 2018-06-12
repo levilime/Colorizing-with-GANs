@@ -116,7 +116,7 @@ class BaseModel:
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
                 pred = np.array(fake_image.eval())
-                img = Image.fromarray((pred * 255).astype('uint8'))
+                img = Image.fromarray((pred[0] * 255).astype('uint8'))
                 img.save(os.path.join(self.result_dir, name))
                 step = step + 1
 
