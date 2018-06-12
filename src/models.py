@@ -115,24 +115,8 @@ class BaseModel:
                 fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
-                width, height = fake_image[0][:, :, 0].shape
-                # print()
-                # print(str(width))
-                # print(str(height))
-                img = Image.new('RGB', (width, height))
                 pred = np.array(fake_image.eval())
-                # print(fake_image.eval())
-                # print(str(fake_image))
-                print(str(pred))
-                # for ix in range(width * height):
-                #     xoffset = int(ix) % int(width)
-                #     yoffset = int(int(ix) / int(width))
-                #     im3 = Image.fromarray((pred[ix] * 255).astype(np.uint8))
-                #     img.paste(im3, (xoffset, yoffset))
-                print('ok')
-                print(str(pred[0]))
-                print(str(pred[0][0].astype('uint8') * 255))
-                img = Image.fromarray(pred.astype('uint8'))
+                img = Image.fromarray((pred * 255).astype('uint8'))
                 img.save(os.path.join(self.result_dir, name))
                 step = step + 1
 
