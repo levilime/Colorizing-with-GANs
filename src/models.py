@@ -124,7 +124,7 @@ class BaseModel:
                 step = step + 1
 
         result = np.mean(np.array(result), axis=0)
-        if len(result > 4):
+        if len(result) > 4:
             print('Results: D loss: %f - D fake: %f - D real: %f - G loss: %f - G L1: %f - G gan: %f - accuracy: %f'
                   % (result[0] + result[1], result[0], result[1], result[2] + result[3], result[2], result[3], result[4]))
         else:
