@@ -132,3 +132,8 @@ nohup python3 train.py   --seed 100   --dataset places365   --dataset-path ./dat
 
 - train data: http://data.csail.mit.edu/places/places365/test_256.tar
 - validation: http://data.csail.mit.edu/places/places365/val_256.tar
+
+install everything
+```
+git clone https://github.com/levilime/Colorizing-with-GANs.git && cd Colorizing-with-GANs && git checkout myversion && pip3 install -r requirements.txt && sudo apt-get -y install python python3-tk
+```
