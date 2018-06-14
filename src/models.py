@@ -224,7 +224,11 @@ class BaseModel:
         self.saver = tf.train.Saver()
 
     def load(self):
-        ckpt = tf.train.get_checkpoint_state(self.options.checkpoints_path)
+        cpkt = None
+        if self.options.hdf5load:
+            cpkt = tf.keras.models.load_model(self.options.hdf5address)
+        else:
+            ckpt = tf.train.get_checkpoint_state(self.options.checkpoints_path)
         if ckpt is not None:
             print('loading model...\n')
             ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
