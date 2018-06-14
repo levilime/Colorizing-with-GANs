@@ -48,7 +48,8 @@ class ModelOptions:
         parser.add_argument('--test-size', type=int, default=100, metavar='N', help='number of Turing tests (default: 100)')
         parser.add_argument('--test-delay', type=int, default=0, metavar='N', help='number of seconds to wait when doing Turing test, 0 for unlimited (default: 0)')
         parser.add_argument('--gpu-ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-
+        parser.add_argument('--hdf5load', type=str2bool, default=False)
+        parser.add_argument('--hdf5address', type=str, default="")
         self._parser = parser
 
     def parse(self):
