@@ -103,22 +103,26 @@ class BaseModel:
         result = []
         step = 0
         for input_rgb in test_generator:
-            feed_dic = {self.input_rgb: input_rgb}
+            try:
+                feed_dic = {self.input_rgb: input_rgb}
 
-            #self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
-            # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
-            #result.append(self.eval_outputs(feed_dic=feed_dic))
-            #progbar.add(len(input_rgb))
+                #self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
+                # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
+                #result.append(self.eval_outputs(feed_dic=feed_dic))
+                #progbar.add(len(input_rgb))
 
-            if saveImgs:
-                name = self.options.dataset + "_" + str(step).zfill(7) + ".png"
-                fake_image, input_gray = self.sess.run([self.gen, self.input_gray], feed_dict=feed_dic)
-                fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
-                                         colorspace_out=COLORSPACE_RGB)
-                pred = np.array(fake_image.eval())
-                img = Image.fromarray((pred[0] * 255).astype('uint8'))
-                img.save(os.path.join(self.result_dir, name))
-                print(str(step))
+                if saveImgs:
+                    name = self.options.dataset + "_" + str(step).zfill(7) + ".png"
+                    fake_image, input_gray = self.sess.run([self.gen, self.input_gray], feed_dict=feed_dic)
+                    fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
+                                             colorspace_out=COLORSPACE_RGB)
+                    pred = np.array(fake_image.eval())
+                    img = Image.fromarray((pred[0] * 255).astype('uint8'))
+                    img.save(os.path.join(self.result_dir, name))
+                    print(str(step))
+                    step = step + 1
+            except:
+                print(str(step) +" failed")
                 step = step + 1
 
         result = np.mean(np.array(result), axis=0)
