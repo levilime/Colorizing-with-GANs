@@ -120,6 +120,6 @@ class Places365Dataset(BaseDataset):
                 glob.glob(self.path + '/data_256/**/*.jpg', recursive=True))
 
         else:
-            data = np.array(glob.glob(self.path + '/val_256/*.jpg'))
+            data = np.array(sorted(glob.glob(self.path + '/val_256/*.jpg')))
 
         return data

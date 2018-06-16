@@ -21,7 +21,7 @@ class BaseModel:
         self.options = options
         self.name = options.name
         self.samples_dir = os.path.join(options.checkpoints_path, 'samples')
-        self.result_dir = os.path.join(options.checkpoints_path, 'results');
+        self.result_dir = os.path.join(options.checkpoints_path, 'results')
         self.test_log_file = os.path.join(options.checkpoints_path, 'log_test.dat')
         self.train_log_file = os.path.join(options.checkpoints_path, 'log_train.dat')
         self.global_step = tf.Variable(0, name='global_step', trainable=False)
@@ -112,12 +112,13 @@ class BaseModel:
 
             if saveImgs:
                 name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
-                fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
+                fake_image, input_gray = self.sess.run([self.gen, self.input_gray], feed_dict=feed_dic)
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
                 pred = np.array(fake_image.eval())
                 img = Image.fromarray((pred[0] * 255).astype('uint8'))
                 img.save(os.path.join(self.result_dir, name))
+                print(str(step))
                 step = step + 1
 
         result = np.mean(np.array(result), axis=0)
