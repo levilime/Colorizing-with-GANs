@@ -105,10 +105,10 @@ class BaseModel:
         for input_rgb in test_generator:
             feed_dic = {self.input_rgb: input_rgb}
 
-            self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
+            #self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
             # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
-            result.append(self.eval_outputs(feed_dic=feed_dic))
-            progbar.add(len(input_rgb))
+            #result.append(self.eval_outputs(feed_dic=feed_dic))
+            #progbar.add(len(input_rgb))
 
             if saveImgs:
                 name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
