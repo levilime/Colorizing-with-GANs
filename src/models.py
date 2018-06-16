@@ -111,7 +111,7 @@ class BaseModel:
             #progbar.add(len(input_rgb))
 
             if saveImgs:
-                name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
+                name = self.options.dataset + "_" + str(step).zfill(7) + ".png"
                 fake_image, input_gray = self.sess.run([self.gen, self.input_gray], feed_dict=feed_dic)
                 fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
                                          colorspace_out=COLORSPACE_RGB)
