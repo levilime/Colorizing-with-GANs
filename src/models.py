@@ -13,6 +13,7 @@ from .dataset import Places365Dataset, Cifar10Dataset
 from .ops import pixelwise_accuracy, preprocess, postprocess
 from .ops import COLORSPACE_RGB, COLORSPACE_LAB
 from .utils import stitch_images, turing_test, imshow, visualize
+from PIL import Image
 
 class BaseModel:
     def __init__(self, sess, options):
@@ -126,6 +127,8 @@ class BaseModel:
         if len(result) > 4:
             print('Results: D loss: %f - D fake: %f - D real: %f - G loss: %f - G L1: %f - G gan: %f - accuracy: %f'
                   % (result[0] + result[1], result[0], result[1], result[2] + result[3], result[2], result[3], result[4]))
+        else:
+            print('result broken: '+ str(result))
 
         if self.options.log:
             with open(self.test_log_file, 'a') as f:

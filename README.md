@@ -124,8 +124,17 @@ If you use this code for your research, please cite our paper <a href="https://a
   year={2018}
 }
 ```
+## To train
 
-## Adjustments on this fork
+```
+nohup python3 train.py   --seed 100   --dataset places365   --dataset-path ./dataset/places365   --checkpoints-path ./checkpoints   --batch-size 8   --epochs 20   --lr 3e-4   --augment True   --log True   --log-interval 1  --save True  --save-interval 128 --gpu-ids 0,1,2,3,4,5,6,7  --sample True  --sample-interval 32 &
+```
 
-When evaluating through the `test-eval.py` script, all colorized images created from the images in the validate folder
-will be saved.
+- train data: http://data.csail.mit.edu/places/places365/test_256.tar
+- validation: http://data.csail.mit.edu/places/places365/val_256.tar
+
+install everything
+```
+git clone https://github.com/levilime/Colorizing-with-GANs.git && cd Colorizing-with-GANs && git checkout myversion && pip3 install -r requirements.txt && sudo apt-get -y install python python3-tk
+```
+>>>>>>> a7369c120821afa81cf586535b1ad4244992e657
