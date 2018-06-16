@@ -7,6 +7,7 @@ from .utils import unpickle
 
 CIFAR10_DATASET = 'cifar10'
 PLACES365_DATASET = 'places365'
+SHUFFLE = True
 
 
 class BaseDataset():
@@ -72,7 +73,8 @@ class BaseDataset():
     def data(self):
         if len(self._data) == 0:
             self._data = self.load()
-            np.random.shuffle(self._data)
+            if SHUFFLE:
+                np.random.shuffle(self._data)
 
         return self._data
 

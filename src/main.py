@@ -56,7 +56,7 @@ def main(options):
             model.train()
 
         elif options.mode == 1:
-            model.evaluate(True)
+            model.evaluate(True, False)
             while True:
                 model.sample()
 

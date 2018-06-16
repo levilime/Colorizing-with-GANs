@@ -93,7 +93,7 @@ class BaseModel:
             if self.options.validate:
                 self.evaluate()
 
-    def evaluate(self, saveImgs=False):
+    def evaluate(self, saveImgs=False, evaluate=True):
         print('\n\nEvaluating epoch: %d' % self.epoch)
         test_total = len(self.dataset_test)
         test_generator = self.dataset_test.generator(self.options.batch_size)
@@ -103,23 +103,29 @@ class BaseModel:
         step = 0
         for input_rgb in test_generator:
             feed_dic = {self.input_rgb: input_rgb}
+            try:
+                if evaluate:
+                    self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
+                    # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
+                    result.append(self.eval_outputs(feed_dic=feed_dic))
+                    progbar.add(len(input_rgb))
 
-            self.sess.run([self.dis_loss, self.gen_loss, self.accuracy], feed_dict=feed_dic)
-            # errD_fake, errD_real, errG_l1, errG_gan, acc, step = self.eval_outputs(feed_dic=feed_dic)
-            result.append(self.eval_outputs(feed_dic=feed_dic))
-            progbar.add(len(input_rgb))
-
-            if saveImgs:
-                name = self.options.dataset + "_" + str(step).zfill(5) + ".png"
-                fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
-                fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
-                                         colorspace_out=COLORSPACE_RGB)
-                fake_image.save(os.path.join(self.result_dir, name))
+                if saveImgs:
+                    name = self.options.dataset + "_" + str(step).zfill(7) + ".png"
+                    fake_image, input_gray = self.sess.run([self.sampler, self.input_gray], feed_dict=feed_dic)
+                    fake_image = postprocess(tf.convert_to_tensor(fake_image), colorspace_in=self.options.color_space,
+                                             colorspace_out=COLORSPACE_RGB)
+                    fake_image.save(os.path.join(self.result_dir, name))
+                    print(str(step) + " created")
+                    step = step + 1
+            except ValueError:
+                print(str(step) + " could not colorize")
                 step = step + 1
 
         result = np.mean(np.array(result), axis=0)
-        print('Results: D loss: %f - D fake: %f - D real: %f - G loss: %f - G L1: %f - G gan: %f - accuracy: %f'
-              % (result[0] + result[1], result[0], result[1], result[2] + result[3], result[2], result[3], result[4]))
+        if len(result) > 4:
+            print('Results: D loss: %f - D fake: %f - D real: %f - G loss: %f - G L1: %f - G gan: %f - accuracy: %f'
+                  % (result[0] + result[1], result[0], result[1], result[2] + result[3], result[2], result[3], result[4]))
 
         if self.options.log:
             with open(self.test_log_file, 'a') as f:
@@ -224,11 +230,7 @@ class BaseModel:
         self.saver = tf.train.Saver()
 
     def load(self):
-        cpkt = None
-        if self.options.hdf5load:
-            cpkt = tf.keras.models.load_model(self.options.hdf5address)
-        else:
-            ckpt = tf.train.get_checkpoint_state(self.options.checkpoints_path)
+        ckpt = tf.train.get_checkpoint_state(self.options.checkpoints_path)
         if ckpt is not None:
             print('loading model...\n')
             ckpt_name = os.path.basename(ckpt.model_checkpoint_path)

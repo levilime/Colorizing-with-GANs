@@ -124,3 +124,8 @@ If you use this code for your research, please cite our paper <a href="https://a
   year={2018}
 }
 ```
+
+## Adjustments on this fork
+
+When evaluating through the `test-eval.py` script, all colorized images created from the images in the validate folder
+will be saved.
